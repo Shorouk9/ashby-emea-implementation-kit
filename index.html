@@ -34,7 +34,7 @@
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
-  padding-block:0 64px}
+  padding-block:0 104px}
 .wrap{max-width:1072px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 a{color:var(--accent)}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,label.chip:focus-within{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
@@ -65,7 +65,7 @@ section{padding-block:40px 8px;border-top:1px solid var(--line);margin-top:24px;
 /* builder */
 .builder{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:20px;align-items:start}
 @media (max-width:860px){.builder{grid-template-columns:minmax(0,1fr)}}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:16px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:16px;min-width:0;align-content:start}
 .field{display:grid;gap:6px}
 .field>label,.field>.lbl{font-size:.8rem;font-weight:600;color:var(--muted);letter-spacing:.02em}
 input[type=text],input[type=number],input[type=date],select{width:100%;font:inherit;font-size:.95rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
@@ -97,9 +97,9 @@ label.chip:has(input:checked){background:var(--accent-soft);border-color:var(--a
 .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
 @media (max-width:760px){.cols{grid-template-columns:minmax(0,1fr)}}
 ul.plain{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.ms{display:grid;grid-template-columns:96px 1fr;gap:10px;font-size:.92rem}
+.ms{display:grid;grid-template-columns:minmax(96px,auto) 1fr auto;gap:10px;font-size:.92rem;align-items:start}
 .ms .mono{color:var(--muted);font-size:.8rem;padding-top:2px}
-.risk{display:grid;grid-template-columns:auto 1fr;gap:10px;font-size:.92rem;align-items:start}
+.risk{display:grid;grid-template-columns:auto 1fr auto;gap:10px;font-size:.92rem;align-items:start}
 .pill{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px;white-space:nowrap;margin-top:2px}
 .pill.high{background:var(--crit-soft);color:var(--crit)}
 .pill.med{background:var(--warn-soft);color:var(--warn)}
@@ -117,7 +117,7 @@ textarea#copyFallback{width:100%;min-height:160px;font-family:var(--mono);font-s
 .stage{display:grid;gap:10px}
 .stage h3{display:flex;gap:10px;align-items:baseline}
 .stage h3 .mono{font-size:.75rem;color:var(--muted);font-weight:400}
-.check{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.check{display:grid;grid-template-columns:auto 1fr auto;gap:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;cursor:pointer}
 .check input{margin-top:5px;accent-color:var(--accent);width:16px;height:16px}
 .check strong{font-weight:600;display:block}
 .check p{color:var(--muted);font-size:.9rem;max-width:70ch}
@@ -125,6 +125,27 @@ textarea#copyFallback{width:100%;min-height:160px;font-family:var(--mono);font-s
 .check .src{font-size:.78rem}
 .note{background:var(--sunken);border-radius:10px;padding:12px 14px;font-size:.88rem;color:var(--muted)}
 
+/* edit mode */
+[hidden]{display:none!important}
+.g-cust{font-family:var(--mono);font-size:.7rem;color:var(--muted);font-weight:400}
+.editing [contenteditable="true"]{outline:1px dashed var(--accent);outline-offset:3px;border-radius:3px;cursor:text}
+.editing [contenteditable="true"]:hover{background:var(--accent-soft)}
+.editing [contenteditable="true"]:focus{outline:2px solid var(--accent);background:var(--accent-soft)}
+.editing .band [contenteditable="true"]{outline-color:var(--band-accent)}
+.editing .band [contenteditable="true"]:hover,.editing .band [contenteditable="true"]:focus{background:rgba(93,78,214,.3)}
+.ed{display:inline-block;min-width:3ch;max-width:100%}
+[contenteditable="true"]:empty::before{content:"Type here";color:var(--muted)}
+.x{font:inherit;font-size:1rem;line-height:1;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:6px;width:26px;height:26px;cursor:pointer;align-self:start;padding:0}
+.x:hover{color:var(--crit);border-color:var(--crit)}
+.add{font:inherit;font-size:.85rem;font-weight:600;color:var(--accent);background:transparent;border:1px dashed var(--accent);border-radius:8px;padding:6px 12px;cursor:pointer}
+.add:hover{background:var(--accent-soft)}
+.add-row{list-style:none}
+input.wkin{width:3.6em;font-family:var(--mono);font-size:.78rem;padding:2px 4px;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--ink);margin-left:2px}
+.g-label .wk{display:flex;gap:4px;align-items:center;margin-top:5px;font-family:var(--mono);font-size:.7rem;color:var(--muted);font-weight:400}
+.ms .mono{white-space:nowrap}
+select.pill{width:auto;appearance:none;-webkit-appearance:none;border:1px solid currentColor;cursor:pointer;padding:2px 7px}
+.editbar{position:fixed;right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px));z-index:20;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px;box-shadow:0 8px 28px rgba(20,20,21,.16);max-width:calc(100vw - 32px)}
+.editbar .hint{padding-inline:6px}
 footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted);display:grid;gap:10px}
 footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
@@ -134,8 +155,8 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
 <header class="band">
   <div class="wrap top">
     <p class="eyebrow"><b>Ashby</b> · Strategic Implementations · EMEA</p>
-    <h1>EMEA Implementation Kit</h1>
-    <p class="lede">Two working tools for enterprise implementations in Europe and the Middle East: a plan builder that turns a Sales handoff into a dated plan with risks, and a GDPR checklist for candidate data during migration.</p>
+    <h1 data-k="txt:h1" data-static>EMEA Implementation Kit</h1>
+    <p class="lede" data-k="txt:herolede" data-static>Two working tools for enterprise implementations in Europe and the Middle East: a plan builder that turns a Sales handoff into a dated plan with risks, and a GDPR checklist for candidate data during migration.</p>
     <nav class="jump" aria-label="Sections">
       <a href="#planner"><span>01</span>Plan builder</a>
       <a href="#gdpr"><span>02</span>GDPR migration checklist</a>
@@ -148,8 +169,8 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
   <section id="planner">
     <div class="sec-head">
       <p class="eyebrow">01 · From handoff to go-live</p>
-      <h2>Implementation plan builder</h2>
-      <p class="lede">Enter what Sales hands over. The plan, milestones, risks and kickoff checklist update as you go. Durations are planning assumptions to calibrate against the team's real data.</p>
+      <h2 data-k="txt:planh2" data-static>Implementation plan builder</h2>
+      <p class="lede" data-k="txt:planlede" data-static>Enter what Sales hands over. The plan, milestones, risks and kickoff checklist update as you go. Durations are planning assumptions to calibrate against the team's real data.</p>
     </div>
 
     <div class="builder">
@@ -222,17 +243,17 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
         <div class="gantt-scroll"><div class="gantt" id="gantt"></div></div>
         <div class="cols">
           <div class="panel">
-            <h3>Milestones</h3>
+            <h3 data-k="txt:msh3" data-static>Milestones</h3>
             <ul class="plain" id="milestones"></ul>
           </div>
           <div class="panel">
-            <h3>Risks to manage from day one</h3>
+            <h3 data-k="txt:riskh3" data-static>Risks to manage from day one</h3>
             <ul class="plain" id="risks"></ul>
           </div>
         </div>
         <div class="panel">
-          <h3>Kickoff checklist for the customer</h3>
-          <p class="hint">Names to have on the plan before week 2, so nothing waits on finding the right person.</p>
+          <h3 data-k="txt:kickh3" data-static>Kickoff checklist for the customer</h3>
+          <p class="hint" data-k="txt:kickhint" data-static>Names to have on the plan before week 2, so nothing waits on finding the right person.</p>
           <ul class="plain" id="kickoffList"></ul>
         </div>
         <div class="actions">
@@ -248,16 +269,16 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
   <section id="gdpr">
     <div class="sec-head">
       <p class="eyebrow">02 · Documentation gap</p>
-      <h2>GDPR checklist for candidate data migration</h2>
-      <p class="lede">Ashby's Greenhouse API migration does not carry over candidate consent dates or data retention dates. For an EU customer, that means candidates can arrive in Ashby with no retention clock. This checklist closes that gap and sets up Ashby's own compliance tools before go-live.</p>
+      <h2 data-k="txt:gdh2" data-static>GDPR checklist for candidate data migration</h2>
+      <p class="lede" data-k="txt:gdlede" data-static>Ashby's Greenhouse API migration does not carry over candidate consent dates or data retention dates. For an EU customer, that means candidates can arrive in Ashby with no retention clock. This checklist closes that gap and sets up Ashby's own compliance tools before go-live.</p>
     </div>
     <div class="progress"><div class="bar"><i id="gBar"></i></div><span class="mono" id="gCount">0 / 0</span><button type="button" class="btn ghost" id="gReset">Clear ticks</button></div>
     <div id="gdprList" style="display:grid;gap:24px"></div>
-    <p class="note">This is an implementation checklist, not legal advice. The customer's DPO or legal team decides the lawful basis and retention periods; the implementation makes sure Ashby enforces what they decide.</p>
+    <p class="note" data-k="txt:gdnote" data-static>This is an implementation checklist, not legal advice. The customer's DPO or legal team decides the lawful basis and retention periods; the implementation makes sure Ashby enforces what they decide.</p>
   </section>
 
   <footer>
-    <p>Built as a working sample for Ashby's Strategic Implementations team, October 2026. Product facts come from Ashby's public documentation; durations and risk rules are planning assumptions.</p>
+    <p data-k="txt:foot" data-static>Built as a working sample for Ashby's Strategic Implementations team, October 2026. Product facts come from Ashby's public documentation; durations and risk rules are planning assumptions.</p>
     <ul>
       <li><a href="https://docs.ashbyhq.com/greenhouse-ashby-recruiting-api-migration" target="_blank" rel="noopener">Greenhouse → Ashby API migration</a></li>
       <li><a href="https://ashbyhq.notion.site/Which-types-of-migrations-are-supported-44336edb9455451894836713a297f06c" target="_blank" rel="noopener">Supported migration types</a></li>
@@ -269,9 +290,20 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
   </footer>
 </div>
 
+<div class="editbar" role="region" aria-label="Edit content">
+  <span class="hint" id="editNote" hidden>Click any outlined text to edit. Saved in this browser.</span>
+  <button type="button" class="btn ghost" id="resetEdits" hidden>Reset edits</button>
+  <button type="button" class="btn" id="editToggle" aria-pressed="false">Edit content</button>
+</div>
+
 <script>
 (function(){
   const $ = id => document.getElementById(id);
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+  const uid = () => "u" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+  const lbl = {high:"High", med:"Medium", low:"Low"};
+
   const COUNTRIES = [
     {k:"UK",n:"UK",law:"uk"},{k:"IE",n:"Ireland",law:"eu"},{k:"DE",n:"Germany",law:"eu",wc:1},{k:"FR",n:"France",law:"eu",wc:1},
     {k:"ES",n:"Spain",law:"eu"},{k:"NL",n:"Netherlands",law:"eu",wc:1},{k:"IT",n:"Italy",law:"eu"},{k:"PL",n:"Poland",law:"eu"},
@@ -307,7 +339,7 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
       users: Math.max(1, parseInt($("users").value,10)||0),
       weeks: Math.min(24, Math.max(6, parseInt($("weeks").value,10)||14)),
       kickoff: $("kickoff").value,
-      sched: $("m_sched").checked, crm: $("m_crm").checked, analytics: $("m_analytics").checked, pw: $("m_pw").checked,
+      crm: $("m_crm").checked, pw: $("m_pw").checked,
       wc: $("wc").checked
     };
   }
@@ -328,19 +360,19 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
   function phases(s){
     const W = s.weeks;
     const P = [
-      {n:"Kickoff & discovery",f0:0,f1:.14},
-      {n:"Design: workflows, permissions, reporting",f0:.12,f1:.32},
-      {n:"Build & configure",f0:.30,f1:.58},
-      {n:s.ats==="none"?"Integrations":"Migration & integrations",f0:.38,f1:.68},
-      {n:"Testing & training",f0:.66,f1:.84},
-      {n:"Go-live & hypercare",f0:.84,f1:1}
+      {k:"kick",n:"Kickoff & discovery",f0:0,f1:.14},
+      {k:"design",n:"Design: workflows, permissions, reporting",f0:.12,f1:.32},
+      {k:"build",n:"Build & configure",f0:.30,f1:.58},
+      {k:"mig",n:s.ats==="none"?"Integrations":"Migration & integrations",f0:.38,f1:.68},
+      {k:"test",n:"Testing & training",f0:.66,f1:.84},
+      {k:"live",n:"Go-live & hypercare",f0:.84,f1:1}
     ];
     const out = P.map(p=>{
       const a = Math.min(W, Math.floor(p.f0*W)+1);
       const b = Math.max(a, Math.round(p.f1*W));
-      return {n:p.n,a,b};
+      return {k:p.k,n:p.n,a,b};
     });
-    if (s.wc) out.push({n:"Works council approval",a:1,b:Math.max(2,Math.round(.62*W)),alt:true});
+    if (s.wc) out.push({k:"wc",n:"Works council approval",a:1,b:Math.max(2,Math.round(.62*W)),alt:true});
     return out;
   }
 
@@ -352,125 +384,44 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
     return d;
   }
   const fmt = d => d ? d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"}) : "–";
+  const short = d => d ? d.toLocaleDateString("en-GB",{day:"numeric",month:"short"}) : "";
 
-  function risks(s, rec){
+  function defaultRisks(s, rec){
     const r = [];
     const eu = s.countries.some(c=>c.law==="eu"||c.law==="uk");
     const me = s.countries.some(c=>c.law==="me");
-    if (s.weeks < rec) r.push(["high",`The target is ${rec-s.weeks} week${rec-s.weeks>1?"s":""} shorter than this scope usually needs. Agree with the sponsor now what moves to phase two, or move the date.`]);
-    if (s.ats==="greenhouse" && eu) r.push(["high","Consent and retention dates don't come across in the Greenhouse API migration. Export them separately and import them as data compliance override dates (section 02)."]);
-    if (s.ats==="lever") r.push(["med","API migration only covers some Lever accounts. Confirm the route in scoping and keep a file-based import as the fallback."]);
-    if (s.ats==="workable") r.push(["med","Workable has no API migration. Plan a file-based import and a bulk resume import, and book a test load early."]);
-    if (s.ats==="other") r.push(["med","This ATS isn't in Ashby's public migration matrix. Get a sample export in week 1 to confirm format and field coverage."]);
-    if (s.hris==="workday") r.push(["med","The Workday sync needs an Integration System User, job mapping and sync settings. Book the customer's Workday admin from week 2."]);
-    if (s.hris==="other") r.push(["med","This HR system isn't on Ashby's public integration list. Agree a fallback (API, export or manual push) before design sign-off."]);
-    if (s.wc) r.push(["high","Works council approval can block go-live. Share the data processing and access model in week 1 so the review runs alongside the build."]);
-    if (me) r.push(["med","UAE, Saudi and Egyptian data protection laws set their own retention and cross-border transfer rules. Confirm them with the customer's legal team alongside GDPR."]);
-    if (s.countries.length >= 3) r.push(["med",`${s.countries.length} countries multiply interview plans, offer templates and retention rules. Decide in design what is global and what is local.`]);
-    if (s.users > 150) r.push(["low",`${s.users} users: train hiring managers in cohorts by region, with a champion in each, rather than one big session.`]);
-    if (s.pw) r.push(["med","People Workflows is in early access. Confirm availability and scope with Product before committing dates to the customer."]);
-    if (s.crm) r.push(["low","Sourcing and CRM data needs its own retention rule for leads, separate from applicants."]);
-    if (!r.length) r.push(["low","No major risks from these inputs. Keep the weekly status note going anyway."]);
+    if (s.weeks < rec) r.push({k:"short",l:"high",t:`The target is ${rec-s.weeks} week${rec-s.weeks>1?"s":""} shorter than this scope usually needs. Agree with the sponsor now what moves to phase two, or move the date.`});
+    if (s.ats==="greenhouse" && eu) r.push({k:"gh",l:"high",t:"Consent and retention dates don't come across in the Greenhouse API migration. Export them separately and import them as data compliance override dates (section 02)."});
+    if (s.ats==="lever") r.push({k:"lever",l:"med",t:"API migration only covers some Lever accounts. Confirm the route in scoping and keep a file-based import as the fallback."});
+    if (s.ats==="workable") r.push({k:"workable",l:"med",t:"Workable has no API migration. Plan a file-based import and a bulk resume import, and book a test load early."});
+    if (s.ats==="other") r.push({k:"otherats",l:"med",t:"This ATS isn't in Ashby's public migration matrix. Get a sample export in week 1 to confirm format and field coverage."});
+    if (s.hris==="workday") r.push({k:"workday",l:"med",t:"The Workday sync needs an Integration System User, job mapping and sync settings. Book the customer's Workday admin from week 2."});
+    if (s.hris==="other") r.push({k:"otherhr",l:"med",t:"This HR system isn't on Ashby's public integration list. Agree a fallback (API, export or manual push) before design sign-off."});
+    if (s.wc) r.push({k:"wc",l:"high",t:"Works council approval can block go-live. Share the data processing and access model in week 1 so the review runs alongside the build."});
+    if (me) r.push({k:"me",l:"med",t:"UAE, Saudi and Egyptian data protection laws set their own retention and cross-border transfer rules. Confirm them with the customer's legal team alongside GDPR."});
+    if (s.countries.length >= 3) r.push({k:"multi",l:"med",t:`${s.countries.length} countries multiply interview plans, offer templates and retention rules. Decide in design what is global and what is local.`});
+    if (s.users > 150) r.push({k:"users",l:"low",t:`${s.users} users: train hiring managers in cohorts by region, with a champion in each, rather than one big session.`});
+    if (s.pw) r.push({k:"pw",l:"med",t:"People Workflows is in early access. Confirm availability and scope with Product before committing dates to the customer."});
+    if (s.crm) r.push({k:"crm",l:"low",t:"Sourcing and CRM data needs its own retention rule for leads, separate from applicants."});
+    if (!r.length) r.push({k:"none",l:"low",t:"No major risks from these inputs. Keep the weekly status note going anyway."});
     return r;
   }
 
-  function kickoff(s){
+  function defaultKick(s){
     const k = [
-      "Executive sponsor who can make scope and date calls",
-      "Recruiting operations owner who will be the Ashby admin",
-      "IT contact for single sign-on and user provisioning",
-      "Hiring manager champion in each region",
-      "Current reports and dashboards the team relies on, to rebuild in Ashby"
+      {k:"sponsor",t:"Executive sponsor who can make scope and date calls"},
+      {k:"ops",t:"Recruiting operations owner who will be the Ashby admin"},
+      {k:"it",t:"IT contact for single sign-on and user provisioning"},
+      {k:"champ",t:"Hiring manager champion in each region"},
+      {k:"reports",t:"Current reports and dashboards the team relies on, to rebuild in Ashby"}
     ];
-    if (s.ats!=="none") k.splice(2,0,`${ATS[s.ats].name} admin with full export access`);
-    if (s.hris!=="none") k.splice(3,0,`${HRIS[s.hris].name} admin for the integration setup`);
-    if (s.countries.some(c=>c.law!=="none")) k.push("DPO or legal contact to confirm lawful basis and retention periods per country");
-    if (s.wc) k.push("Works council contact and the date of their next review meeting");
+    if (s.ats!=="none") k.splice(2,0,{k:"atsadmin",t:`${ATS[s.ats].name} admin with full export access`});
+    if (s.hris!=="none") k.splice(3,0,{k:"hrisadmin",t:`${HRIS[s.hris].name} admin for the integration setup`});
+    k.push({k:"dpo",t:"DPO or legal contact to confirm lawful basis and retention periods per country"});
+    if (s.wc) k.push({k:"wcc",t:"Works council contact and the date of their next review meeting"});
     return k;
   }
 
-  let lastText = "";
-  function render(){
-    const s = state(), rec = recommended(s), ph = phases(s), W = s.weeks;
-    $("sWeeks").textContent = W;
-    $("sRec").textContent = rec;
-    $("sRec").style.color = W < rec ? "var(--crit)" : "";
-    const golive = addWeeks(s.kickoff, ph[5].a-1);
-    $("sGolive").textContent = golive ? golive.toLocaleDateString("en-GB",{day:"numeric",month:"short"}) : "–";
-
-    // gantt
-    const g = $("gantt");
-    g.style.gridTemplateColumns = `minmax(190px,240px) repeat(${W}, minmax(26px,1fr))`;
-    let h = `<div class="g-label" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);font-weight:400">${escape(s.cust)}</div>`;
-    for (let i=1;i<=W;i++) h += `<div class="g-head">W${i}</div>`;
-    ph.forEach(p=>{
-      h += `<div class="g-label">${p.n}</div>`;
-      for (let i=1;i<=W;i++){
-        const on = i>=p.a && i<=p.b;
-        h += `<div class="g-cell">${on?`<div class="g-bar${p.alt?" alt":""}" title="${p.n}: weeks ${p.a}–${p.b}"></div>`:""}</div>`;
-      }
-    });
-    g.innerHTML = h;
-
-    // milestones
-    const mig = ph[3];
-    const ms = [
-      [1,"Kickoff: goals, scope, owners and the weekly cadence agreed"],
-      [ph[1].b,"Design sign-off: workflows, permissions, interview plans, reports"],
-      s.ats==="none" ? [Math.round((mig.a+mig.b)/2),"Integrations tested in a sandbox"] : [Math.round((mig.a+mig.b)/2),"Test migration loaded and checked by the customer"],
-      [ph[4].b,"Testing sign-off and admins trained"],
-      [ph[5].a,`Go-live${s.ats!=="none"?" and final migration":""}`],
-      [W,"Handover to Customer Success"]
-    ];
-    if (s.wc) ms.splice(3,0,[ph[6].b,"Works council approval in hand"]);
-    ms.sort((a,b)=>a[0]-b[0]);
-    $("milestones").innerHTML = ms.map(m=>{
-      const d = addWeeks(s.kickoff, m[0]-1);
-      return `<li class="ms"><span class="mono">W${m[0]} · ${d?d.toLocaleDateString("en-GB",{day:"numeric",month:"short"}):""}</span><span>${m[1]}</span></li>`;
-    }).join("");
-
-    const rk = risks(s, rec);
-    const lbl = {high:"High",med:"Medium",low:"Low"};
-    $("risks").innerHTML = rk.map(x=>`<li class="risk"><span class="pill ${x[0]}">${lbl[x[0]]}</span><span>${x[1]}</span></li>`).join("");
-
-    const kk = kickoff(s);
-    $("kickoffList").innerHTML = kk.map(x=>`<li class="risk"><span class="pill low">Name</span><span>${x}</span></li>`).join("");
-
-    // text version
-    const lines = [];
-    lines.push(`${s.cust} — Ashby implementation plan`);
-    lines.push(`Countries: ${s.countries.map(c=>c.n).join(", ")||"–"} | Legacy ATS: ${ATS[s.ats].name} (${ATS[s.ats].route}) | HR system: ${HRIS[s.hris].name} | Users: ${s.users}`);
-    lines.push(`Planned: ${W} weeks from ${fmt(addWeeks(s.kickoff,0))} | Scope usually needs: ${rec} weeks | Go-live: ${fmt(golive)}`);
-    lines.push("", "Phases:");
-    ph.forEach(p=>lines.push(`- ${p.n}: weeks ${p.a}–${p.b}`));
-    lines.push("", "Milestones:");
-    ms.forEach(m=>lines.push(`- W${m[0]} (${fmt(addWeeks(s.kickoff,m[0]-1))}): ${m[1]}`));
-    lines.push("", "Risks:");
-    rk.forEach(x=>lines.push(`- [${lbl[x[0]]}] ${x[1]}`));
-    lines.push("", "Kickoff checklist (names needed):");
-    kk.forEach(x=>lines.push(`- ${x}`));
-    lastText = lines.join("\n");
-    $("copyFallback").value = lastText;
-  }
-  function escape(t){return t.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
-
-  $("inputs").addEventListener("input", e=>{
-    const t = e.target;
-    if (t.id && t.id.startsWith("c_") && t.checked){
-      const c = COUNTRIES.find(x=>"c_"+x.k===t.id);
-      if (c && c.wc) $("wc").checked = true;
-    }
-    render();
-  });
-  $("inputs").addEventListener("submit", e=>e.preventDefault());
-
-  $("copyBtn").addEventListener("click", ()=>{
-    const done = ()=>{ $("copyStatus").textContent="Copied"; setTimeout(()=>$("copyStatus").textContent="",2000); };
-    const fallback = ()=>{ const ta=$("copyFallback"); ta.hidden=false; ta.focus(); ta.select(); $("copyStatus").textContent="Select all and copy the text below"; };
-    try { navigator.clipboard.writeText(lastText).then(done, fallback); } catch(e){ fallback(); }
-  });
-
-  // GDPR checklist
   const G = [
     {stage:"Before migration",when:"Weeks 1–3",items:[
       ["Agree lawful basis and retention period for each hiring country","The customer's DPO decides, for example 12 months for EU candidates and 24 for the US. Write it into the design document so the configuration has a source.",""],
@@ -495,32 +446,259 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
       ["Put a monthly retention review in the admin's calendar","Hand this to Customer Success as part of the handover note.",""]
     ]}
   ];
-  const KEY="ashbyKitGdpr";
-  let saved = {};
-  try { saved = JSON.parse(localStorage.getItem(KEY)||"{}")||{}; } catch(e){ saved = {}; }
-  const list = $("gdprList");
-  let total = 0, html = "";
-  G.forEach((st,si)=>{
-    html += `<div class="stage"><h3>${st.stage} <span class="mono">${st.when}</span></h3>`;
-    st.items.forEach((it,ii)=>{
-      const id=`g_${si}_${ii}`; total++;
-      html += `<label class="check" for="${id}"><input type="checkbox" id="${id}" ${saved[id]?"checked":""}><span><strong>${it[0]}</strong><p>${it[1]}</p>${it[2]?`<a class="src" href="${it[2]}" target="_blank" rel="noopener">Ashby source</a>`:""}</span></label>`;
-    });
-    html += `</div>`;
-  });
-  list.innerHTML = html;
-  function gUpdate(){
-    const boxes = list.querySelectorAll("input[type=checkbox]");
-    let n=0; const st={};
-    boxes.forEach(b=>{ if(b.checked){n++; st[b.id]=1;} });
-    $("gCount").textContent = `${n} / ${total}`;
-    $("gBar").style.width = (n/total*100)+"%";
-    try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){}
-  }
-  list.addEventListener("change", gUpdate);
-  $("gReset").addEventListener("click", ()=>{ list.querySelectorAll("input").forEach(b=>b.checked=false); gUpdate(); });
 
-  render(); gUpdate();
+  /* ---------- edits ---------- */
+  const EK = "ashbyKitEdits-v1";
+  const blank = () => ({txt:{}, phase:{}, ms:{txt:{},wk:{},del:[],add:[]}, risk:{txt:{},lvl:{},del:[],add:[]}, kick:{txt:{},del:[],add:[]}, gd:{txt:{},det:{},del:[],add:[[],[],[],[]]}});
+  let E = blank();
+  try {
+    const v = JSON.parse(localStorage.getItem(EK) || "null");
+    if (v && typeof v === "object") {
+      const b = blank();
+      E = {txt:v.txt||{}, phase:v.phase||{}, ms:Object.assign(b.ms,v.ms), risk:Object.assign(b.risk,v.risk), kick:Object.assign(b.kick,v.kick), gd:Object.assign(b.gd,v.gd)};
+    }
+  } catch(e) { E = blank(); }
+  let editing = false;
+  const hasEdits = () => JSON.stringify(E) !== JSON.stringify(blank());
+  function save(){ try { localStorage.setItem(EK, JSON.stringify(E)); } catch(e){} bar(); }
+
+  const ed = (k,t) => editing ? `<span class="ed" contenteditable="true" spellcheck="true" data-k="${k}">${esc(t)}</span>` : `<span>${esc(t)}</span>`;
+  const del = (sec,id) => editing ? `<button type="button" class="x" data-del="${sec}:${id}" aria-label="Delete">×</button>` : "";
+  const addBtn = (sec,label) => editing ? `<li class="add-row"><button type="button" class="add" data-add="${sec}">+ ${label}</button></li>` : "";
+
+  function applyList(defs, sec){
+    const o = E[sec];
+    return defs.filter(d=>!o.del.includes(d.k)).map(d=>{
+      const r = {...d};
+      if (o.txt[d.k] != null) r.t = o.txt[d.k];
+      if (o.wk && Number.isFinite(o.wk[d.k])) r.w = o.wk[d.k];
+      if (o.lvl && o.lvl[d.k]) r.l = o.lvl[d.k];
+      return r;
+    }).concat(o.add.map(a=>({...a, custom:true})));
+  }
+
+  function model(){
+    const s = state(), rec = recommended(s), W = s.weeks;
+    const ph = phases(s).map(p=>{
+      const o = E.phase[p.k] || {};
+      const a = clamp(Number.isFinite(o.a) ? o.a : p.a, 1, W);
+      const b = clamp(Number.isFinite(o.b) ? o.b : p.b, a, W);
+      return {...p, n: typeof o.n === "string" ? o.n : p.n, a, b};
+    });
+    const P = {}; ph.forEach(p=>P[p.k]=p);
+    const msDef = [
+      {k:"kickoff",w:1,t:"Kickoff: goals, scope, owners and the weekly cadence agreed"},
+      {k:"design",w:P.design.b,t:"Design sign-off: workflows, permissions, interview plans, reports"},
+      {k:"mig",w:Math.round((P.mig.a+P.mig.b)/2),t:s.ats==="none"?"Integrations tested in a sandbox":"Test migration loaded and checked by the customer"}
+    ];
+    if (P.wc) msDef.push({k:"wc",w:P.wc.b,t:"Works council approval in hand"});
+    msDef.push(
+      {k:"test",w:P.test.b,t:"Testing sign-off and admins trained"},
+      {k:"golive",w:P.live.a,t:`Go-live${s.ats!=="none"?" and final migration":""}`},
+      {k:"handover",w:W,t:"Handover to Customer Success"}
+    );
+    const ms = applyList(msDef,"ms").map(m=>({...m, w:clamp(parseInt(m.w,10)||1,1,W)})).sort((a,b)=>a.w-b.w);
+    const rk = applyList(defaultRisks(s,rec),"risk");
+    const kk = applyList(defaultKick(s),"kick");
+    const golive = addWeeks(s.kickoff, P.live.a-1);
+    return {s, rec, W, ph, ms, rk, kk, golive};
+  }
+
+  function buildText(M){
+    const {s,rec,W,ph,ms,rk,kk,golive} = M;
+    const lines = [];
+    lines.push(`${s.cust} — Ashby implementation plan`);
+    lines.push(`Countries: ${s.countries.map(c=>c.n).join(", ")||"–"} | Legacy ATS: ${ATS[s.ats].name} (${ATS[s.ats].route}) | HR system: ${HRIS[s.hris].name} | Users: ${s.users}`);
+    lines.push(`Planned: ${W} weeks from ${fmt(addWeeks(s.kickoff,0))} | Scope usually needs: ${rec} weeks | Go-live: ${fmt(golive)}`);
+    lines.push("", "Phases:");
+    ph.forEach(p=>lines.push(`- ${p.n}: weeks ${p.a}–${p.b}`));
+    lines.push("", "Milestones:");
+    ms.forEach(m=>lines.push(`- W${m.w} (${fmt(addWeeks(s.kickoff,m.w-1))}): ${m.t}`));
+    lines.push("", "Risks:");
+    rk.forEach(x=>lines.push(`- [${lbl[x.l]||x.l}] ${x.t}`));
+    lines.push("", "Kickoff checklist (names needed):");
+    kk.forEach(x=>lines.push(`- ${x.t}`));
+    return lines.join("\n");
+  }
+
+  function render(){
+    const M = model(), {s,rec,W,ph,ms,rk,kk,golive} = M;
+    $("sWeeks").textContent = W;
+    $("sRec").textContent = rec;
+    $("sRec").style.color = W < rec ? "var(--crit)" : "";
+    $("sGolive").textContent = golive ? short(golive) : "–";
+
+    const g = $("gantt");
+    g.style.gridTemplateColumns = `minmax(${editing?230:190}px,${editing?270:240}px) repeat(${W}, minmax(26px,1fr))`;
+    let h = `<div class="g-label g-cust">${esc(s.cust)}</div>`;
+    for (let i=1;i<=W;i++) h += `<div class="g-head">W${i}</div>`;
+    ph.forEach(p=>{
+      h += `<div class="g-label">${ed(`phase:${p.k}:n`,p.n)}${editing?`<span class="wk">W<input type="number" class="wkin" data-k="phase:${p.k}:a" value="${p.a}" min="1" max="${W}" aria-label="Start week"> to W<input type="number" class="wkin" data-k="phase:${p.k}:b" value="${p.b}" min="1" max="${W}" aria-label="End week"></span>`:""}</div>`;
+      for (let i=1;i<=W;i++){
+        const on = i>=p.a && i<=p.b;
+        h += `<div class="g-cell">${on?`<div class="g-bar${p.alt?" alt":""}" title="${esc(p.n)}: weeks ${p.a}–${p.b}"></div>`:""}</div>`;
+      }
+    });
+    g.innerHTML = h;
+
+    $("milestones").innerHTML = ms.map(m=>{
+      const wk = editing ? `W<input type="number" class="wkin" data-k="ms:${m.k}:w" value="${m.w}" min="1" max="${W}" aria-label="Milestone week">` : `W${m.w}`;
+      return `<li class="ms"><span class="mono">${wk} · ${short(addWeeks(s.kickoff,m.w-1))}</span>${ed(`ms:${m.k}:t`,m.t)}${del("ms",m.k)}</li>`;
+    }).join("") + addBtn("ms","Add milestone");
+
+    $("risks").innerHTML = rk.map(x=>{
+      const pill = editing
+        ? `<select class="pill ${x.l}" data-k="risk:${x.k}:l" aria-label="Risk level">${["high","med","low"].map(v=>`<option value="${v}"${v===x.l?" selected":""}>${lbl[v]}</option>`).join("")}</select>`
+        : `<span class="pill ${x.l}">${lbl[x.l]||x.l}</span>`;
+      return `<li class="risk">${pill}${ed(`risk:${x.k}:t`,x.t)}${del("risk",x.k)}</li>`;
+    }).join("") + addBtn("risk","Add risk");
+
+    $("kickoffList").innerHTML = kk.map(x=>`<li class="risk"><span class="pill low">Name</span>${ed(`kick:${x.k}:t`,x.t)}${del("kick",x.k)}</li>`).join("") + addBtn("kick","Add contact");
+  }
+
+  /* ---------- GDPR ---------- */
+  const CK = "ashbyKitGdpr";
+  let checks = {};
+  try { checks = JSON.parse(localStorage.getItem(CK)||"{}") || {}; } catch(e){ checks = {}; }
+  const list = $("gdprList");
+  let gTotal = 0;
+  function renderG(){
+    let html = "", total = 0;
+    G.forEach((st,si)=>{
+      const items = st.items.map((it,ii)=>({k:`g_${si}_${ii}`,t:it[0],d:it[1],src:it[2]}))
+        .filter(x=>!E.gd.del.includes(x.k))
+        .map(x=>({...x, t:E.gd.txt[x.k] ?? x.t, d:E.gd.det[x.k] ?? x.d}))
+        .concat((E.gd.add[si]||[]).map(a=>({...a, src:""})));
+      const name = E.txt["gdstage"+si] ?? st.stage, when = E.txt["gdwhen"+si] ?? st.when;
+      html += `<div class="stage"><h3>${ed("txt:gdstage"+si,name)} <span class="mono">${ed("txt:gdwhen"+si,when)}</span></h3>`;
+      items.forEach(x=>{
+        total++;
+        const c = checks[x.k] ? " checked" : "";
+        const src = x.src ? `<a class="src" href="${x.src}" target="_blank" rel="noopener">Ashby source</a>` : "";
+        if (editing) html += `<div class="check"><input type="checkbox" id="${x.k}"${c} aria-label="Mark done"><span><strong>${ed(`gd:${x.k}:t`,x.t)}</strong><p>${ed(`gd:${x.k}:d`,x.d)}</p>${src}</span>${del("gd",x.k)}</div>`;
+        else html += `<label class="check" for="${x.k}"><input type="checkbox" id="${x.k}"${c}><span><strong>${esc(x.t)}</strong><p>${esc(x.d)}</p>${src}</span></label>`;
+      });
+      if (editing) html += `<div><button type="button" class="add" data-add="gd:${si}">+ Add check</button></div>`;
+      html += `</div>`;
+    });
+    list.innerHTML = html;
+    gTotal = total;
+    gUpdate(false);
+  }
+  function gUpdate(store){
+    let n = 0;
+    list.querySelectorAll("input[type=checkbox]").forEach(b=>{ if(b.checked){ n++; checks[b.id]=1; } else delete checks[b.id]; });
+    $("gCount").textContent = `${n} / ${gTotal}`;
+    $("gBar").style.width = (gTotal ? n/gTotal*100 : 0) + "%";
+    if (store !== false) { try { localStorage.setItem(CK, JSON.stringify(checks)); } catch(e){} }
+  }
+  list.addEventListener("change", e=>{ if (e.target.type==="checkbox") gUpdate(true); });
+  $("gReset").addEventListener("click", ()=>{ list.querySelectorAll("input[type=checkbox]").forEach(b=>b.checked=false); gUpdate(true); });
+
+  /* ---------- edit wiring ---------- */
+  const statics = [...document.querySelectorAll("[data-static]")];
+  const DEF = {};
+  statics.forEach(el=>{ const id = el.dataset.k.split(":")[1]; DEF[id] = el.textContent; if (E.txt[id] != null) el.textContent = E.txt[id]; });
+
+  function findAdd(sec,id){
+    if (sec==="gd"){ for (const arr of E.gd.add){ const f = (arr||[]).find(a=>a.k===id); if (f) return f; } return null; }
+    return E[sec].add.find(a=>a.k===id) || null;
+  }
+  function setVal(k,v){
+    const [sec,id,f] = k.split(":");
+    if (sec==="txt") E.txt[id] = v;
+    else if (sec==="phase"){
+      const o = E.phase[id] || (E.phase[id] = {});
+      if (f==="n") o.n = v; else { const n = parseInt(v,10); if (!Number.isFinite(n)) return; o[f] = n; }
+    } else {
+      const num = f==="w";
+      const val = num ? parseInt(v,10) : v;
+      if (num && !Number.isFinite(val)) return;
+      const a = findAdd(sec,id);
+      if (a) a[f] = val;
+      else E[sec][{t:"txt",w:"wk",l:"lvl",d:"det"}[f]][id] = val;
+    }
+    save();
+  }
+  function delItem(sec,id){
+    if (sec==="gd"){
+      for (const arr of E.gd.add){ const i = (arr||[]).findIndex(a=>a.k===id); if (i>=0){ arr.splice(i,1); save(); return; } }
+      if (!E.gd.del.includes(id)) E.gd.del.push(id);
+      save(); return;
+    }
+    const o = E[sec]; const i = o.add.findIndex(a=>a.k===id);
+    if (i>=0) o.add.splice(i,1); else if (!o.del.includes(id)) o.del.push(id);
+    save();
+  }
+  function addItem(spec){
+    const [sec,st] = spec.split(":"); const k = uid(); const W = state().weeks;
+    if (sec==="ms") E.ms.add.push({k, w:Math.ceil(W/2), t:"New milestone"});
+    else if (sec==="risk") E.risk.add.push({k, l:"med", t:"New risk"});
+    else if (sec==="kick") E.kick.add.push({k, t:"New contact"});
+    else if (sec==="gd") (E.gd.add[+st] || (E.gd.add[+st]=[])).push({k, t:"New check", d:"What to check and why."});
+    save();
+    return `${sec}:${k}:t`;
+  }
+  function selectAll(n){ const r = document.createRange(); r.selectNodeContents(n); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(r); }
+  function rerender(){
+    const a = document.activeElement, k = a && a.dataset ? a.dataset.k : null;
+    render(); renderG();
+    if (k){ const n = document.querySelector(`[data-k="${k}"]`); if (n){ n.focus(); if (n.isContentEditable){ const r=document.createRange(); r.selectNodeContents(n); r.collapse(false); const sl=getSelection(); sl.removeAllRanges(); sl.addRange(r); } } }
+  }
+
+  document.addEventListener("input", e=>{ const t = e.target; if (t.isContentEditable && t.dataset.k) setVal(t.dataset.k, t.textContent.replace(/\s+/g," ").trim()); });
+  document.addEventListener("change", e=>{ const t = e.target; if (t.dataset && t.dataset.k && (t.tagName==="INPUT" || t.tagName==="SELECT")){ setVal(t.dataset.k, t.value); rerender(); } });
+  document.addEventListener("keydown", e=>{ const t = e.target; if (t.isContentEditable && e.key==="Enter"){ e.preventDefault(); t.blur(); } });
+  document.addEventListener("paste", e=>{ const t = e.target; if (t.isContentEditable){ e.preventDefault(); const txt = (e.clipboardData ? e.clipboardData.getData("text/plain") : "").replace(/\s*\n\s*/g," "); document.execCommand("insertText", false, txt); } });
+  document.addEventListener("click", e=>{
+    const d = e.target.closest("[data-del]");
+    if (d){ const [sec,id] = d.dataset.del.split(":"); delItem(sec,id); render(); renderG(); return; }
+    const a = e.target.closest("[data-add]");
+    if (a){ const k = addItem(a.dataset.add); render(); renderG(); const n = document.querySelector(`[data-k="${k}"]`); if (n){ n.focus(); selectAll(n); } }
+  });
+
+  function bar(){
+    $("editToggle").textContent = editing ? "Done editing" : "Edit content";
+    $("editToggle").setAttribute("aria-pressed", String(editing));
+    $("editNote").hidden = !editing;
+    $("resetEdits").hidden = !(editing && hasEdits());
+  }
+  $("editToggle").addEventListener("click", ()=>{
+    editing = !editing;
+    document.body.classList.toggle("editing", editing);
+    statics.forEach(el=>{ if (editing){ el.setAttribute("contenteditable","true"); el.spellcheck = true; } else el.removeAttribute("contenteditable"); });
+    render(); renderG(); bar();
+  });
+  let armed = null;
+  $("resetEdits").addEventListener("click", ()=>{
+    const b = $("resetEdits");
+    if (!armed){ b.textContent = "Click again to reset"; armed = setTimeout(()=>{ armed = null; b.textContent = "Reset edits"; }, 4000); return; }
+    clearTimeout(armed); armed = null; b.textContent = "Reset edits";
+    E = blank(); save();
+    statics.forEach(el=>{ el.textContent = DEF[el.dataset.k.split(":")[1]]; });
+    render(); renderG();
+  });
+
+  /* ---------- planner inputs & copy ---------- */
+  $("inputs").addEventListener("input", e=>{
+    const t = e.target;
+    if (t.id && t.id.startsWith("c_") && t.checked){
+      const c = COUNTRIES.find(x=>"c_"+x.k===t.id);
+      if (c && c.wc) $("wc").checked = true;
+    }
+    render();
+  });
+  $("inputs").addEventListener("submit", e=>e.preventDefault());
+
+  $("copyBtn").addEventListener("click", ()=>{
+    const text = buildText(model());
+    $("copyFallback").value = text;
+    const done = ()=>{ $("copyStatus").textContent="Copied"; setTimeout(()=>$("copyStatus").textContent="",2000); };
+    const fallback = ()=>{ const ta=$("copyFallback"); ta.hidden=false; ta.focus(); ta.select(); $("copyStatus").textContent="Select all and copy the text below"; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+
+  render(); renderG(); bar();
 })();
 </script>
 
