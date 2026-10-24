@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EMEA Implementation Kit</title>
+<meta name="description" content="A plan builder and GDPR migration checklist for enterprise Ashby implementations in EMEA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one long working document, a narrow reading column with full-width tool panels; a project-plan grid is the signature element. */
+:root{
+  --bg:#F8F7FB; --surface:#FFFFFF; --sunken:#F1EFF7; --ink:#18161F; --muted:#5E5A6E; --line:#E3E0EC;
+  --accent:#5A3FE0; --accent-soft:#ECE8FD; --accent-ink:#FFFFFF;
+  --good:#1F7A4D; --good-soft:#E3F3EA; --warn:#9A5B00; --warn-soft:#FBF0DC; --crit:#B3261E; --crit-soft:#FBE6E4;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body:"Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#121019; --surface:#1B1924; --sunken:#23202E; --ink:#ECEAF4; --muted:#A39FB6; --line:#2F2C3B;
+  --accent:#A694FF; --accent-soft:#2A2445; --accent-ink:#141020;
+  --good:#6FD39E; --good-soft:#18301F; --warn:#F0B95C; --warn-soft:#33270F; --crit:#FF8E85; --crit-soft:#3A1A18;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#121019; --surface:#1B1924; --sunken:#23202E; --ink:#ECEAF4; --muted:#A39FB6; --line:#2F2C3B;
+  --accent:#A694FF; --accent-soft:#2A2445; --accent-ink:#141020;
+  --good:#6FD39E; --good-soft:#18301F; --warn:#F0B95C; --warn-soft:#33270F; --crit:#FF8E85; --crit-soft:#3A1A18;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,label.chip:focus-within{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.2vw,2rem);font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--muted);max-width:62ch;font-size:1.05rem}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+header.top{padding-block:48px 28px;display:grid;gap:14px}
+nav.jump{display:flex;flex-wrap:wrap;gap:8px;padding-block:6px 4px}
+nav.jump a{text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:999px;font-size:.9rem;font-weight:500}
+nav.jump a:hover{border-color:var(--accent);color:var(--accent)}
+nav.jump a span{font-family:var(--mono);color:var(--muted);margin-right:6px}
+
+section{padding-block:40px 8px;border-top:1px solid var(--line);margin-top:24px;display:grid;gap:20px}
+.sec-head{display:grid;gap:8px}
+
+/* builder */
+.builder{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.builder{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:16px;min-width:0}
+.field{display:grid;gap:6px}
+.field>label,.field>.lbl{font-size:.8rem;font-weight:600;color:var(--muted);letter-spacing:.02em}
+input[type=text],input[type=number],input[type=date],select{width:100%;font:inherit;font-size:.95rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+label.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:.85rem;cursor:pointer;background:var(--bg);user-select:none}
+label.chip input{position:absolute;opacity:0;width:1px;height:1px}
+label.chip:has(input:checked){background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.toggle{display:flex;gap:10px;align-items:flex-start;font-size:.9rem}
+.toggle input{margin-top:4px;accent-color:var(--accent)}
+.hint{font-size:.8rem;color:var(--muted)}
+.example-tag{font-family:var(--mono);font-size:.7rem;background:var(--sunken);color:var(--muted);padding:3px 8px;border-radius:4px;justify-self:start}
+
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.summary div{background:var(--surface);padding:12px 14px;display:grid;gap:2px}
+.summary b{font-family:var(--display);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums}
+.summary span{font-size:.78rem;color:var(--muted)}
+@media (max-width:520px){.summary{grid-template-columns:1fr}}
+
+.gantt-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.gantt{display:grid;min-width:640px;font-size:.82rem}
+.g-label{padding:8px 10px;border-bottom:1px solid var(--line);background:var(--surface);position:sticky;left:0;z-index:1;font-weight:600}
+.g-head{font-family:var(--mono);font-size:.7rem;color:var(--muted);text-align:center;padding:6px 0;border-bottom:1px solid var(--line);border-left:1px solid var(--line)}
+.g-cell{border-bottom:1px solid var(--line);border-left:1px solid var(--line)}
+.g-bar{margin:7px 2px;border-radius:5px;background:var(--accent);height:18px}
+.g-bar.alt{background:transparent;border:2px dashed var(--warn);height:18px}
+.g-bar.soft{background:var(--accent-soft);border:1px solid var(--accent)}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+@media (max-width:760px){.cols{grid-template-columns:minmax(0,1fr)}}
+ul.plain{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ms{display:grid;grid-template-columns:96px 1fr;gap:10px;font-size:.92rem}
+.ms .mono{color:var(--muted);font-size:.8rem;padding-top:2px}
+.risk{display:grid;grid-template-columns:auto 1fr;gap:10px;font-size:.92rem;align-items:start}
+.pill{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px;white-space:nowrap;margin-top:2px}
+.pill.high{background:var(--crit-soft);color:var(--crit)}
+.pill.med{background:var(--warn-soft);color:var(--warn)}
+.pill.low{background:var(--good-soft);color:var(--good)}
+.btn{font:inherit;font-weight:600;font-size:.9rem;border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.status{font-size:.85rem;color:var(--good)}
+textarea#copyFallback{width:100%;min-height:160px;font-family:var(--mono);font-size:.78rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px}
+
+/* checklist */
+.progress{display:flex;align-items:center;gap:12px}
+.bar{flex:1;height:8px;background:var(--sunken);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.stage{display:grid;gap:10px}
+.stage h3{display:flex;gap:10px;align-items:baseline}
+.stage h3 .mono{font-size:.75rem;color:var(--muted);font-weight:400}
+.check{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.check input{margin-top:5px;accent-color:var(--accent);width:16px;height:16px}
+.check strong{font-weight:600;display:block}
+.check p{color:var(--muted);font-size:.9rem;max-width:70ch}
+.check:has(input:checked) strong{text-decoration:line-through;text-decoration-color:var(--muted)}
+.check .src{font-size:.78rem}
+.note{background:var(--sunken);border-radius:10px;padding:12px 14px;font-size:.88rem;color:var(--muted)}
+
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted);display:grid;gap:10px}
+footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Ashby · Strategic Implementations · EMEA</p>
+    <h1>EMEA Implementation Kit</h1>
+    <p class="lede">Two working tools for enterprise implementations in Europe and the Middle East: a plan builder that turns a Sales handoff into a dated plan with risks, and a GDPR checklist for candidate data during migration.</p>
+    <nav class="jump" aria-label="Sections">
+      <a href="#planner"><span>01</span>Plan builder</a>
+      <a href="#gdpr"><span>02</span>GDPR migration checklist</a>
+    </nav>
+  </header>
+
+  <!-- 01 PLANNER -->
+  <section id="planner">
+    <div class="sec-head">
+      <p class="eyebrow">01 · From handoff to go-live</p>
+      <h2>Implementation plan builder</h2>
+      <p class="lede">Enter what Sales hands over. The plan, milestones, risks and kickoff checklist update as you go. Durations are planning assumptions to calibrate against the team's real data.</p>
+    </div>
+
+    <div class="builder">
+      <form class="panel" id="inputs" autocomplete="off">
+        <span class="example-tag">Example customer loaded</span>
+        <div class="field">
+          <label for="cust">Customer</label>
+          <input type="text" id="cust" value="Northwind Logistics">
+        </div>
+        <div class="field">
+          <span class="lbl" id="ctryLbl">Hiring countries</span>
+          <div class="chips" role="group" aria-labelledby="ctryLbl" id="countries"></div>
+        </div>
+        <div class="field">
+          <label for="ats">Legacy ATS</label>
+          <select id="ats">
+            <option value="greenhouse" selected>Greenhouse</option>
+            <option value="lever">Lever</option>
+            <option value="workable">Workable</option>
+            <option value="other">Other (SmartRecruiters, Teamtailor, Workday Recruiting…)</option>
+            <option value="none">None, first ATS</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="hris">HR system</label>
+          <select id="hris">
+            <option value="workday" selected>Workday</option>
+            <option value="bamboohr">BambooHR</option>
+            <option value="hibob">HiBob</option>
+            <option value="personio">Personio</option>
+            <option value="rippling">Rippling</option>
+            <option value="deel">Deel</option>
+            <option value="gusto">Gusto</option>
+            <option value="other">Other (Factorial, SuccessFactors, local system…)</option>
+            <option value="none">None at go-live</option>
+          </select>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="users">Ashby users</label>
+            <input type="number" id="users" min="5" max="5000" value="220">
+          </div>
+          <div class="field">
+            <label for="weeks">Target weeks</label>
+            <input type="number" id="weeks" min="6" max="24" value="14">
+          </div>
+        </div>
+        <div class="field">
+          <label for="kickoff">Kickoff date</label>
+          <input type="date" id="kickoff" value="2026-11-02">
+        </div>
+        <div class="field">
+          <span class="lbl" id="modLbl">Scope</span>
+          <div class="chips" role="group" aria-labelledby="modLbl">
+            <label class="chip"><input type="checkbox" id="m_sched" checked>Scheduling</label>
+            <label class="chip"><input type="checkbox" id="m_crm">CRM &amp; sourcing</label>
+            <label class="chip"><input type="checkbox" id="m_analytics" checked>Analytics</label>
+            <label class="chip"><input type="checkbox" id="m_pw">People Workflows</label>
+          </div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="wc" checked><span>Works council sign-off needed<br><span class="hint">Usual in Germany, France and the Netherlands. Ticked automatically when you pick one of them.</span></span></label>
+      </form>
+
+      <div style="display:grid;gap:18px;min-width:0">
+        <div class="summary" aria-live="polite">
+          <div><b id="sWeeks">14</b><span>weeks planned</span></div>
+          <div><b id="sRec">15</b><span>weeks this scope usually needs</span></div>
+          <div><b id="sGolive">–</b><span>go-live date</span></div>
+        </div>
+        <div class="gantt-scroll"><div class="gantt" id="gantt"></div></div>
+        <div class="cols">
+          <div class="panel">
+            <h3>Milestones</h3>
+            <ul class="plain" id="milestones"></ul>
+          </div>
+          <div class="panel">
+            <h3>Risks to manage from day one</h3>
+            <ul class="plain" id="risks"></ul>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Kickoff checklist for the customer</h3>
+          <p class="hint">Names to have on the plan before week 2, so nothing waits on finding the right person.</p>
+          <ul class="plain" id="kickoffList"></ul>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="copyBtn">Copy plan as text</button>
+          <span class="status" id="copyStatus" role="status"></span>
+        </div>
+        <textarea id="copyFallback" hidden readonly aria-label="Plan text to copy"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 GDPR -->
+  <section id="gdpr">
+    <div class="sec-head">
+      <p class="eyebrow">02 · Documentation gap</p>
+      <h2>GDPR checklist for candidate data migration</h2>
+      <p class="lede">Ashby's Greenhouse API migration does not carry over candidate consent dates or data retention dates. For an EU customer, that means candidates can arrive in Ashby with no retention clock. This checklist closes that gap and sets up Ashby's own compliance tools before go-live.</p>
+    </div>
+    <div class="progress"><div class="bar"><i id="gBar"></i></div><span class="mono" id="gCount">0 / 0</span><button type="button" class="btn ghost" id="gReset">Clear ticks</button></div>
+    <div id="gdprList" style="display:grid;gap:24px"></div>
+    <p class="note">This is an implementation checklist, not legal advice. The customer's DPO or legal team decides the lawful basis and retention periods; the implementation makes sure Ashby enforces what they decide.</p>
+  </section>
+
+  <footer>
+    <p>Built as a working sample for Ashby's Strategic Implementations team, October 2026. Product facts come from Ashby's public documentation; durations and risk rules are planning assumptions.</p>
+    <ul>
+      <li><a href="https://docs.ashbyhq.com/greenhouse-ashby-recruiting-api-migration" target="_blank" rel="noopener">Greenhouse → Ashby API migration</a></li>
+      <li><a href="https://ashbyhq.notion.site/Which-types-of-migrations-are-supported-44336edb9455451894836713a297f06c" target="_blank" rel="noopener">Supported migration types</a></li>
+      <li><a href="https://docs.ashbyhq.com/data-privacy-and-compliance" target="_blank" rel="noopener">Data privacy and compliance in Ashby</a></li>
+      <li><a href="https://www.ashbyhq.com/product-updates/create-multiple-data-retention-rules-for-flexible-compliance-control" target="_blank" rel="noopener">Multiple data retention rules</a></li>
+      <li><a href="https://docs.ashbyhq.com/reporting-on-data-retention-rules-violations-of-rules-and-consent-choice" target="_blank" rel="noopener">Reporting on retention rules and violations</a></li>
+      <li><a href="https://www.ashbyhq.com/integrations-directory/workday" target="_blank" rel="noopener">Workday integration</a> · <a href="https://ashbyhq.com/integrations" target="_blank" rel="noopener">Integrations</a></li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const COUNTRIES = [
+    {k:"UK",n:"UK",law:"uk"},{k:"IE",n:"Ireland",law:"eu"},{k:"DE",n:"Germany",law:"eu",wc:1},{k:"FR",n:"France",law:"eu",wc:1},
+    {k:"ES",n:"Spain",law:"eu"},{k:"NL",n:"Netherlands",law:"eu",wc:1},{k:"IT",n:"Italy",law:"eu"},{k:"PL",n:"Poland",law:"eu"},
+    {k:"NORD",n:"Nordics",law:"eu"},{k:"AE",n:"UAE",law:"me"},{k:"SA",n:"Saudi Arabia",law:"me"},{k:"EG",n:"Egypt",law:"me"}
+  ];
+  const START = ["UK","DE","NL","ES"];
+  const box = $("countries");
+  COUNTRIES.forEach(c=>{
+    const l=document.createElement("label"); l.className="chip";
+    l.innerHTML=`<input type="checkbox" id="c_${c.k}" value="${c.k}" ${START.includes(c.k)?"checked":""}>${c.n}`;
+    box.appendChild(l);
+  });
+
+  const ATS = {
+    greenhouse:{name:"Greenhouse",add:0,route:"API migration (about 2–3 days to run)"},
+    lever:{name:"Lever",add:0.5,route:"API for some accounts, otherwise file-based"},
+    workable:{name:"Workable",add:1,route:"File-based import plus bulk resume import"},
+    other:{name:"Other ATS",add:1.5,route:"Not in Ashby's public matrix; confirm in week 1"},
+    none:{name:"No legacy ATS",add:-1,route:"No migration"}
+  };
+  const HRIS = {
+    workday:{name:"Workday",add:2},bamboohr:{name:"BambooHR",add:0},hibob:{name:"HiBob",add:0},
+    personio:{name:"Personio",add:0},rippling:{name:"Rippling",add:0},deel:{name:"Deel",add:0},
+    gusto:{name:"Gusto",add:0},other:{name:"Other HR system",add:1},none:{name:"No HR system",add:0}
+  };
+
+  function state(){
+    const cs = COUNTRIES.filter(c=>$("c_"+c.k).checked);
+    return {
+      cust: $("cust").value.trim() || "Customer",
+      countries: cs,
+      ats: $("ats").value, hris: $("hris").value,
+      users: Math.max(1, parseInt($("users").value,10)||0),
+      weeks: Math.min(24, Math.max(6, parseInt($("weeks").value,10)||14)),
+      kickoff: $("kickoff").value,
+      sched: $("m_sched").checked, crm: $("m_crm").checked, analytics: $("m_analytics").checked, pw: $("m_pw").checked,
+      wc: $("wc").checked
+    };
+  }
+
+  function recommended(s){
+    let w = 11;
+    w += ATS[s.ats].add + HRIS[s.hris].add;
+    if (s.countries.length >= 3) w += 1;
+    if (s.countries.length >= 6) w += 1;
+    if (s.users > 150) w += 1;
+    if (s.users > 600) w += 1;
+    if (s.wc) w += 1;
+    if (s.crm) w += 0.5;
+    if (s.pw) w += 1;
+    return Math.max(6, Math.ceil(w));
+  }
+
+  function phases(s){
+    const W = s.weeks;
+    const P = [
+      {n:"Kickoff & discovery",f0:0,f1:.14},
+      {n:"Design: workflows, permissions, reporting",f0:.12,f1:.32},
+      {n:"Build & configure",f0:.30,f1:.58},
+      {n:s.ats==="none"?"Integrations":"Migration & integrations",f0:.38,f1:.68},
+      {n:"Testing & training",f0:.66,f1:.84},
+      {n:"Go-live & hypercare",f0:.84,f1:1}
+    ];
+    const out = P.map(p=>{
+      const a = Math.min(W, Math.floor(p.f0*W)+1);
+      const b = Math.max(a, Math.round(p.f1*W));
+      return {n:p.n,a,b};
+    });
+    if (s.wc) out.push({n:"Works council approval",a:1,b:Math.max(2,Math.round(.62*W)),alt:true});
+    return out;
+  }
+
+  function addWeeks(iso, w){
+    if(!iso) return null;
+    const d = new Date(iso+"T00:00:00");
+    if (isNaN(d)) return null;
+    d.setDate(d.getDate()+w*7);
+    return d;
+  }
+  const fmt = d => d ? d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"}) : "–";
+
+  function risks(s, rec){
+    const r = [];
+    const eu = s.countries.some(c=>c.law==="eu"||c.law==="uk");
+    const me = s.countries.some(c=>c.law==="me");
+    if (s.weeks < rec) r.push(["high",`The target is ${rec-s.weeks} week${rec-s.weeks>1?"s":""} shorter than this scope usually needs. Agree with the sponsor now what moves to phase two, or move the date.`]);
+    if (s.ats==="greenhouse" && eu) r.push(["high","Consent and retention dates don't come across in the Greenhouse API migration. Export them separately and import them as data compliance override dates (section 02)."]);
+    if (s.ats==="lever") r.push(["med","API migration only covers some Lever accounts. Confirm the route in scoping and keep a file-based import as the fallback."]);
+    if (s.ats==="workable") r.push(["med","Workable has no API migration. Plan a file-based import and a bulk resume import, and book a test load early."]);
+    if (s.ats==="other") r.push(["med","This ATS isn't in Ashby's public migration matrix. Get a sample export in week 1 to confirm format and field coverage."]);
+    if (s.hris==="workday") r.push(["med","The Workday sync needs an Integration System User, job mapping and sync settings. Book the customer's Workday admin from week 2."]);
+    if (s.hris==="other") r.push(["med","This HR system isn't on Ashby's public integration list. Agree a fallback (API, export or manual push) before design sign-off."]);
+    if (s.wc) r.push(["high","Works council approval can block go-live. Share the data processing and access model in week 1 so the review runs alongside the build."]);
+    if (me) r.push(["med","UAE, Saudi and Egyptian data protection laws set their own retention and cross-border transfer rules. Confirm them with the customer's legal team alongside GDPR."]);
+    if (s.countries.length >= 3) r.push(["med",`${s.countries.length} countries multiply interview plans, offer templates and retention rules. Decide in design what is global and what is local.`]);
+    if (s.users > 150) r.push(["low",`${s.users} users: train hiring managers in cohorts by region, with a champion in each, rather than one big session.`]);
+    if (s.pw) r.push(["med","People Workflows is in early access. Confirm availability and scope with Product before committing dates to the customer."]);
+    if (s.crm) r.push(["low","Sourcing and CRM data needs its own retention rule for leads, separate from applicants."]);
+    if (!r.length) r.push(["low","No major risks from these inputs. Keep the weekly status note going anyway."]);
+    return r;
+  }
+
+  function kickoff(s){
+    const k = [
+      "Executive sponsor who can make scope and date calls",
+      "Recruiting operations owner who will be the Ashby admin",
+      "IT contact for single sign-on and user provisioning",
+      "Hiring manager champion in each region",
+      "Current reports and dashboards the team relies on, to rebuild in Ashby"
+    ];
+    if (s.ats!=="none") k.splice(2,0,`${ATS[s.ats].name} admin with full export access`);
+    if (s.hris!=="none") k.splice(3,0,`${HRIS[s.hris].name} admin for the integration setup`);
+    if (s.countries.some(c=>c.law!=="none")) k.push("DPO or legal contact to confirm lawful basis and retention periods per country");
+    if (s.wc) k.push("Works council contact and the date of their next review meeting");
+    return k;
+  }
+
+  let lastText = "";
+  function render(){
+    const s = state(), rec = recommended(s), ph = phases(s), W = s.weeks;
+    $("sWeeks").textContent = W;
+    $("sRec").textContent = rec;
+    $("sRec").style.color = W < rec ? "var(--crit)" : "";
+    const golive = addWeeks(s.kickoff, ph[5].a-1);
+    $("sGolive").textContent = golive ? golive.toLocaleDateString("en-GB",{day:"numeric",month:"short"}) : "–";
+
+    // gantt
+    const g = $("gantt");
+    g.style.gridTemplateColumns = `minmax(190px,240px) repeat(${W}, minmax(26px,1fr))`;
+    let h = `<div class="g-label" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);font-weight:400">${escape(s.cust)}</div>`;
+    for (let i=1;i<=W;i++) h += `<div class="g-head">W${i}</div>`;
+    ph.forEach(p=>{
+      h += `<div class="g-label">${p.n}</div>`;
+      for (let i=1;i<=W;i++){
+        const on = i>=p.a && i<=p.b;
+        h += `<div class="g-cell">${on?`<div class="g-bar${p.alt?" alt":""}" title="${p.n}: weeks ${p.a}–${p.b}"></div>`:""}</div>`;
+      }
+    });
+    g.innerHTML = h;
+
+    // milestones
+    const mig = ph[3];
+    const ms = [
+      [1,"Kickoff: goals, scope, owners and the weekly cadence agreed"],
+      [ph[1].b,"Design sign-off: workflows, permissions, interview plans, reports"],
+      s.ats==="none" ? [Math.round((mig.a+mig.b)/2),"Integrations tested in a sandbox"] : [Math.round((mig.a+mig.b)/2),"Test migration loaded and checked by the customer"],
+      [ph[4].b,"Testing sign-off and admins trained"],
+      [ph[5].a,`Go-live${s.ats!=="none"?" and final migration":""}`],
+      [W,"Handover to Customer Success"]
+    ];
+    if (s.wc) ms.splice(3,0,[ph[6].b,"Works council approval in hand"]);
+    ms.sort((a,b)=>a[0]-b[0]);
+    $("milestones").innerHTML = ms.map(m=>{
+      const d = addWeeks(s.kickoff, m[0]-1);
+      return `<li class="ms"><span class="mono">W${m[0]} · ${d?d.toLocaleDateString("en-GB",{day:"numeric",month:"short"}):""}</span><span>${m[1]}</span></li>`;
+    }).join("");
+
+    const rk = risks(s, rec);
+    const lbl = {high:"High",med:"Medium",low:"Low"};
+    $("risks").innerHTML = rk.map(x=>`<li class="risk"><span class="pill ${x[0]}">${lbl[x[0]]}</span><span>${x[1]}</span></li>`).join("");
+
+    const kk = kickoff(s);
+    $("kickoffList").innerHTML = kk.map(x=>`<li class="risk"><span class="pill low">Name</span><span>${x}</span></li>`).join("");
+
+    // text version
+    const lines = [];
+    lines.push(`${s.cust} — Ashby implementation plan`);
+    lines.push(`Countries: ${s.countries.map(c=>c.n).join(", ")||"–"} | Legacy ATS: ${ATS[s.ats].name} (${ATS[s.ats].route}) | HR system: ${HRIS[s.hris].name} | Users: ${s.users}`);
+    lines.push(`Planned: ${W} weeks from ${fmt(addWeeks(s.kickoff,0))} | Scope usually needs: ${rec} weeks | Go-live: ${fmt(golive)}`);
+    lines.push("", "Phases:");
+    ph.forEach(p=>lines.push(`- ${p.n}: weeks ${p.a}–${p.b}`));
+    lines.push("", "Milestones:");
+    ms.forEach(m=>lines.push(`- W${m[0]} (${fmt(addWeeks(s.kickoff,m[0]-1))}): ${m[1]}`));
+    lines.push("", "Risks:");
+    rk.forEach(x=>lines.push(`- [${lbl[x[0]]}] ${x[1]}`));
+    lines.push("", "Kickoff checklist (names needed):");
+    kk.forEach(x=>lines.push(`- ${x}`));
+    lastText = lines.join("\n");
+    $("copyFallback").value = lastText;
+  }
+  function escape(t){return t.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+  $("inputs").addEventListener("input", e=>{
+    const t = e.target;
+    if (t.id && t.id.startsWith("c_") && t.checked){
+      const c = COUNTRIES.find(x=>"c_"+x.k===t.id);
+      if (c && c.wc) $("wc").checked = true;
+    }
+    render();
+  });
+  $("inputs").addEventListener("submit", e=>e.preventDefault());
+
+  $("copyBtn").addEventListener("click", ()=>{
+    const done = ()=>{ $("copyStatus").textContent="Copied"; setTimeout(()=>$("copyStatus").textContent="",2000); };
+    const fallback = ()=>{ const ta=$("copyFallback"); ta.hidden=false; ta.focus(); ta.select(); $("copyStatus").textContent="Select all and copy the text below"; };
+    try { navigator.clipboard.writeText(lastText).then(done, fallback); } catch(e){ fallback(); }
+  });
+
+  // GDPR checklist
+  const G = [
+    {stage:"Before migration",when:"Weeks 1–3",items:[
+      ["Agree lawful basis and retention period for each hiring country","The customer's DPO decides, for example 12 months for EU candidates and 24 for the US. Write it into the design document so the configuration has a source.",""],
+      ["Export consent and retention dates from the legacy ATS","The Greenhouse API migration does not pull these fields. Run a separate export with candidate ID, consent date, consent expiry and retention date.","https://docs.ashbyhq.com/greenhouse-ashby-recruiting-api-migration"],
+      ["Decide which candidates not to migrate","Candidates already past their retention date, or who withdrew consent, should be deleted in the old system rather than moved.",""],
+      ["Confirm the processing agreement and transfer basis","Ashby acts as the customer's data processor. Check the DPA is signed and the candidate privacy notice names Ashby.","https://ashbyhq.com/privacy"],
+      ["Start works council review where needed","Share what data Ashby holds, who can see it and how long it is kept.",""]
+    ]},
+    {stage:"During migration",when:"Migration phase",items:[
+      ["Import retention and consent dates as override dates","Mapping them to Ashby's data compliance override fields on import makes them take precedence over other retention dates.","https://docs.ashbyhq.com/data-privacy-and-compliance"],
+      ["Spot-check 20 migrated EU candidates","Open each profile and confirm the data retention section shows the expected date.",""],
+      ["Reconcile record counts","Candidates exported, minus those deliberately excluded, should equal candidates imported.",""]
+    ]},
+    {stage:"Configure in Ashby",when:"Build phase",items:[
+      ["Create a retention rule per region","Ashby supports several rules at once, for inactive applicants, inactive leads and consent, so EU and non-EU candidates can follow different periods.","https://www.ashbyhq.com/product-updates/create-multiple-data-retention-rules-for-flexible-compliance-control"],
+      ["Turn on consent extension emails","Ashby can email candidates a set number of days before their consent expires. Agree the template and sender with the customer.","https://docs.ashbyhq.com/data-privacy-and-compliance"],
+      ["Build a report of candidates in violation","Use the retention fields in reporting to list candidates past their date, filtered by rule.","https://docs.ashbyhq.com/reporting-on-data-retention-rules-violations-of-rules-and-consent-choice"],
+      ["Name an owner for deletion and access requests","One person at the customer handles candidate requests to see or delete their data.",""]
+    ]},
+    {stage:"Go-live and after",when:"Hypercare",items:[
+      ["Run the violation report 30 days after go-live","Fix any rule or import gaps before handover, while the implementation team is still involved.",""],
+      ["Put a monthly retention review in the admin's calendar","Hand this to Customer Success as part of the handover note.",""]
+    ]}
+  ];
+  const KEY="ashbyKitGdpr";
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY)||"{}")||{}; } catch(e){ saved = {}; }
+  const list = $("gdprList");
+  let total = 0, html = "";
+  G.forEach((st,si)=>{
+    html += `<div class="stage"><h3>${st.stage} <span class="mono">${st.when}</span></h3>`;
+    st.items.forEach((it,ii)=>{
+      const id=`g_${si}_${ii}`; total++;
+      html += `<label class="check" for="${id}"><input type="checkbox" id="${id}" ${saved[id]?"checked":""}><span><strong>${it[0]}</strong><p>${it[1]}</p>${it[2]?`<a class="src" href="${it[2]}" target="_blank" rel="noopener">Ashby source</a>`:""}</span></label>`;
+    });
+    html += `</div>`;
+  });
+  list.innerHTML = html;
+  function gUpdate(){
+    const boxes = list.querySelectorAll("input[type=checkbox]");
+    let n=0; const st={};
+    boxes.forEach(b=>{ if(b.checked){n++; st[b.id]=1;} });
+    $("gCount").textContent = `${n} / ${total}`;
+    $("gBar").style.width = (n/total*100)+"%";
+    try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){}
+  }
+  list.addEventListener("change", gUpdate);
+  $("gReset").addEventListener("click", ()=>{ list.querySelectorAll("input").forEach(b=>b.checked=false); gUpdate(); });
+
+  render(); gUpdate();
+})();
+</script>
+
+</body>
+</html>
