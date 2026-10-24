@@ -11,28 +11,31 @@
 <style>
 /* Layout: one long working document, a narrow reading column with full-width tool panels; a project-plan grid is the signature element. */
 :root{
-  --bg:#F8F7FB; --surface:#FFFFFF; --sunken:#F1EFF7; --ink:#18161F; --muted:#5E5A6E; --line:#E3E0EC;
-  --accent:#5A3FE0; --accent-soft:#ECE8FD; --accent-ink:#FFFFFF;
+  --bg:#F7F7F9; --surface:#FFFFFF; --sunken:#EFEEF4; --ink:#141415; --muted:#5C5B66; --line:#E2E1EA;
+  --accent:#5D4ED6; --accent-soft:#ECEAFB; --accent-ink:#FFFFFF;
+  --band:#141415; --band-ink:#FFFFFF; --band-muted:#B4B3C2; --band-line:rgba(255,255,255,.16); --band-accent:#B9B0FF;
   --good:#1F7A4D; --good-soft:#E3F3EA; --warn:#9A5B00; --warn-soft:#FBF0DC; --crit:#B3261E; --crit-soft:#FBE6E4;
   --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
   --body:"Figtree", "Segoe UI", system-ui, sans-serif;
   --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#121019; --surface:#1B1924; --sunken:#23202E; --ink:#ECEAF4; --muted:#A39FB6; --line:#2F2C3B;
-  --accent:#A694FF; --accent-soft:#2A2445; --accent-ink:#141020;
+  --bg:#141415; --surface:#1C1C1F; --sunken:#242428; --ink:#F4F4F6; --muted:#A5A4B0; --line:#2E2E34;
+  --accent:#9D93F2; --accent-soft:#2A2550; --accent-ink:#141415;
+  --band:#1E1B33; --band-ink:#FFFFFF; --band-muted:#B4B3C2; --band-line:rgba(255,255,255,.14); --band-accent:#B9B0FF;
   --good:#6FD39E; --good-soft:#18301F; --warn:#F0B95C; --warn-soft:#33270F; --crit:#FF8E85; --crit-soft:#3A1A18;
   color-scheme:dark }}
 :root[data-theme="dark"]{
-  --bg:#121019; --surface:#1B1924; --sunken:#23202E; --ink:#ECEAF4; --muted:#A39FB6; --line:#2F2C3B;
-  --accent:#A694FF; --accent-soft:#2A2445; --accent-ink:#141020;
+  --bg:#141415; --surface:#1C1C1F; --sunken:#242428; --ink:#F4F4F6; --muted:#A5A4B0; --line:#2E2E34;
+  --accent:#9D93F2; --accent-soft:#2A2550; --accent-ink:#141415;
+  --band:#1E1B33; --band-ink:#FFFFFF; --band-muted:#B4B3C2; --band-line:rgba(255,255,255,.14); --band-accent:#B9B0FF;
   --good:#6FD39E; --good-soft:#18301F; --warn:#F0B95C; --warn-soft:#33270F; --crit:#FF8E85; --crit-soft:#3A1A18;
   color-scheme:dark }
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
-  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 64px}
-.wrap{max-width:1040px;margin:0 auto}
+  padding-block:0 64px}
+.wrap{max-width:1072px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 a{color:var(--accent)}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,label.chip:focus-within{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
@@ -44,11 +47,17 @@ p{margin:0}
 .lede{color:var(--muted);max-width:62ch;font-size:1.05rem}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-header.top{padding-block:48px 28px;display:grid;gap:14px}
-nav.jump{display:flex;flex-wrap:wrap;gap:8px;padding-block:6px 4px}
-nav.jump a{text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:999px;font-size:.9rem;font-weight:500}
-nav.jump a:hover{border-color:var(--accent);color:var(--accent)}
-nav.jump a span{font-family:var(--mono);color:var(--muted);margin-right:6px}
+header.band{background:var(--band);color:var(--band-ink)}
+.top{padding-block:52px 36px;display:grid;gap:14px}
+.band .eyebrow{color:var(--band-muted)}
+.band .eyebrow b{color:var(--band-accent);font-weight:500}
+.band .lede{color:var(--band-muted)}
+nav.jump{display:flex;flex-wrap:wrap;gap:8px;padding-block:6px 0}
+nav.jump a{text-decoration:none;color:var(--band-ink);border:1px solid var(--band-line);background:rgba(255,255,255,.06);padding:7px 12px;border-radius:999px;font-size:.9rem;font-weight:500}
+nav.jump a:hover{border-color:var(--band-accent);background:rgba(93,78,214,.35)}
+nav.jump a span{font-family:var(--mono);color:var(--band-accent);margin-right:6px}
+.band a:focus-visible{outline-color:var(--band-accent)}
+.wrap > section:first-of-type{border-top:0;margin-top:0}
 
 section{padding-block:40px 8px;border-top:1px solid var(--line);margin-top:24px;display:grid;gap:20px}
 .sec-head{display:grid;gap:8px}
@@ -122,16 +131,18 @@ footer ul{margin:0;padding-left:18px;display:grid;gap:3px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <p class="eyebrow">Ashby · Strategic Implementations · EMEA</p>
+<header class="band">
+  <div class="wrap top">
+    <p class="eyebrow"><b>Ashby</b> · Strategic Implementations · EMEA</p>
     <h1>EMEA Implementation Kit</h1>
     <p class="lede">Two working tools for enterprise implementations in Europe and the Middle East: a plan builder that turns a Sales handoff into a dated plan with risks, and a GDPR checklist for candidate data during migration.</p>
     <nav class="jump" aria-label="Sections">
       <a href="#planner"><span>01</span>Plan builder</a>
       <a href="#gdpr"><span>02</span>GDPR migration checklist</a>
     </nav>
-  </header>
+  </div>
+</header>
+<div class="wrap">
 
   <!-- 01 PLANNER -->
   <section id="planner">
